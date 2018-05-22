@@ -23,5 +23,9 @@ java , jsp
 1.實作單點登入<br>
 2.流量統計<br>
 3.點閱率bug<br>
-![](https://i.imgur.com/FgWIoxU.png)
 
+![](https://i.imgur.com/3Mfp5YY.png)
+<br>
+![](https://i.imgur.com/FgWIoxU.png)
+<br>
+![](https://i.imgur.com/BxdPtOa.png)
