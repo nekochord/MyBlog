@@ -7,20 +7,22 @@ package myservlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Enumeration;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import blog.certification.*;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author 林哲宏
  */
-public class LoginButton extends HttpServlet {
+public class LogoutButton extends HttpServlet {
+    String host="";
+    @Override
+    public void init(){
+        host=this.getInitParameter("host");
+    }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,7 +41,7 @@ public class LoginButton extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LoginButton</title>");            
+            out.println("<title>Servlet LogoutButton</title>");            
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Access Error!</h1>");
@@ -60,7 +62,9 @@ public class LoginButton extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String a=request.getParameter("author");
+        request.getSession().invalidate();
+        response.sendRedirect(this.host+"user/"+a);
     }
 
     /**
@@ -74,30 +78,6 @@ public class LoginButton extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String name=request.getParameter("name");
-        String pass=request.getParameter("pass");
-        if(name==null || pass==null){
-            //有null
-            request.setAttribute("code", 101);
-           response.sendRedirect(this.getInitParameter("host")+"login?code=101");
-        }
-        if(name.equals("")||pass.equals("")){
-            //有一欄為空
-            request.setAttribute("code", 101);
-            response.sendRedirect(this.getInitParameter("host")+"login?code=101");
-        }else{
-            Xman man =new Xman();
-            boolean result=man.login(name, pass);
-            if(result){
-                HttpSession nowhs=request.getSession();
-                nowhs.setAttribute("name", name);
-                nowhs.setAttribute("auth", true);
-                response.sendRedirect(this.getInitParameter("host")+"user/"+name);
-            }else{
-                request.setAttribute("code", 102);
-                response.sendRedirect(this.getInitParameter("host")+"login?code=102");
-            }
-        }   
         processRequest(request, response);
     }
 

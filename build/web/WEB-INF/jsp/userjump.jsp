@@ -32,8 +32,6 @@
     if (path_array.length > 3) {
         page_number = 1;
     }
-    System.out.println(author);
-    System.out.println(page_number);
     String tag=request.getParameter("tag");
     int sort;
     try{
@@ -41,9 +39,6 @@
     }catch(NumberFormatException nfe){
         sort=3;
     }
-    System.out.println(tag);
-    System.out.println(sort);
-    
     //確認是否存在該作者
     Xman man=new Xman();
     if(!man.checkExists(author)){
@@ -53,18 +48,22 @@
     request.setAttribute("page_number", page_number);
     request.setAttribute("tag", tag);
     request.setAttribute("sort", sort);
-    //確認是否為擁有者
+    request.setAttribute("host",config.getInitParameter("host"));
     HttpSession hs = request.getSession();
     if (hs.getAttribute("auth") == null) {
-        request.getRequestDispatcher("/content").forward(request, response);
+        //確認是否為登入狀態
+        request.setAttribute("viewer_type", "Anonymous");
+        request.getRequestDispatcher("/WEB-INF/jsp/content.jsp").forward(request, response);
     }
     String name = (String) hs.getAttribute("name");
     if (name.equals(author)) {
         //看自己的部落格
-        request.getRequestDispatcher("/content_admin").forward(request, response);
+        request.setAttribute("viewer_type", "Owner");
+        request.getRequestDispatcher("/WEB-INF/jsp/content.jsp").forward(request, response);
     }else{
         //看別人的部落格
-        request.getRequestDispatcher("/content_other").forward(request, response);
+        request.setAttribute("viewer_type", "Other");
+        request.getRequestDispatcher("/WEB-INF/jsp/content.jsp").forward(request, response);
     }
 
 %>

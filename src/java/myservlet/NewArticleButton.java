@@ -5,22 +5,24 @@
  */
 package myservlet;
 
+import blog.article.Article;
+import blog.article.XArticle;
+import blog.article.XArticleManager;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.Enumeration;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import blog.certification.*;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author 林哲宏
  */
-public class LoginButton extends HttpServlet {
+public class NewArticleButton extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,7 +41,7 @@ public class LoginButton extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LoginButton</title>");            
+            out.println("<title>Servlet NewArticleButton</title>");            
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Access Error!</h1>");
@@ -74,31 +76,23 @@ public class LoginButton extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String name=request.getParameter("name");
-        String pass=request.getParameter("pass");
-        if(name==null || pass==null){
-            //有null
-            request.setAttribute("code", 101);
-           response.sendRedirect(this.getInitParameter("host")+"login?code=101");
-        }
-        if(name.equals("")||pass.equals("")){
-            //有一欄為空
-            request.setAttribute("code", 101);
-            response.sendRedirect(this.getInitParameter("host")+"login?code=101");
+        HttpSession hs=request.getSession();
+        if(hs.getAttribute("auth")!=null){
+            request.setCharacterEncoding("UTF-8");
+            String author=(String)hs.getAttribute("name");
+            System.out.println(author);
+            String title=request.getParameter("title");
+            String tag=request.getParameter("tag");
+            String picture=request.getParameter("picture");
+            String con=request.getParameter("article");
+             XArticleManager manager=new XArticleManager();
+             manager.openArticles(author);
+             Article article=new XArticle(title,new Date(),picture,con,tag);
+             manager.addArticle(article);
+             response.sendRedirect(this.getInitParameter("host")+"back/"+author);
         }else{
-            Xman man =new Xman();
-            boolean result=man.login(name, pass);
-            if(result){
-                HttpSession nowhs=request.getSession();
-                nowhs.setAttribute("name", name);
-                nowhs.setAttribute("auth", true);
-                response.sendRedirect(this.getInitParameter("host")+"user/"+name);
-            }else{
-                request.setAttribute("code", 102);
-                response.sendRedirect(this.getInitParameter("host")+"login?code=102");
-            }
-        }   
-        processRequest(request, response);
+            processRequest(request, response);
+        }
     }
 
     /**

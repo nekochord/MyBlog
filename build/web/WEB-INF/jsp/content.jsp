@@ -10,6 +10,7 @@
 <%@page import="blog.article.*" %>
 <%!
     public String getIntroduce(Article x) {
+        //傳回文章的前8個字
         String con = x.get_context();
         if (con.length() >= 8) {
             return con.substring(0, 8);
@@ -19,22 +20,28 @@
     }
 %>
 <%
-    //這個頁面是用來轉發的，所以attribute一定有值，而且作者存在
+    //初始化參數區塊 除tag之外其他必定有值
+    String host = (String) request.getAttribute("host");
     String author = (String) request.getAttribute("author");
     String tag = (String) request.getAttribute("tag");
+    String viewer_type = (String) request.getAttribute("viewer_type");
     int sort = (int) request.getAttribute("sort");
     int page_number = (int) request.getAttribute("page_number");
     XArticleManager manager = new XArticleManager();
     manager.openArticles(author);
-    int[] myArticleIDs;
+
+    int[] myArticleIDs;//依照標籤和排序篩選出的ArticleID列表
+    String tag_msg = "";//顯示要篩選的tag標籤
     //判斷tag是否為null
-    String tag_msg = "";
     if (tag == null) {
+        //沒有標籤篩選
         myArticleIDs = manager.getArticleIDsBySort(sort);
     } else {
+        //有標籤篩選
         myArticleIDs = manager.getArticleIDsByTagAndSort(tag, sort);
         tag_msg = tag;
     }
+    //如果沒有任何文章的顯示訊息
     String empty_msg = "";
     if (myArticleIDs == null || myArticleIDs.length == 0) {
         empty_msg = "還沒有發布任何文章喔!";
@@ -43,7 +50,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><%=author%>My Blog</title>
+        <title><%=author%>-My Blog</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -115,15 +122,39 @@
             </div>
             <div class="mynav">
                 <div style="float:left;padding-left:10px;padding-top:2vh;">
-                    <img src="<%=config.getInitParameter("host")%>image/paper.png" style="height:30px;">
+                    <img src="<%=host%>image/paper.png" style="height:30px;">
                     <a style="padding-left:10px;color:white;"><%=author%></a>
+                    <%
+                        //指定首頁按鈕連結
+                        String main_page_link = host + "/user/" + author + "/";
+                    %>
+                    <a class="badge badge-success" style="color:white;font-size:20px" href="<%=main_page_link%>">
+                        首頁
+                    </a>
                 </div>
+
                 <div class="btn-group"  style="float:right;padding-top:2vh;padding-right:10px;">
                     <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="sortButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         用戶
                     </button>
                     <div class="dropdown-menu" aria-labelledby="sortButton">
-                        <a class="dropdown-item" href="<%=config.getInitParameter("host")%>login">登入</a>
+                        <%
+                            if (viewer_type.equals("Anonymous")) {
+                        %>
+                        <a class="dropdown-item" href="<%=host%>login">登入</a>
+                        <%
+                        } else {
+                        %>
+                        <%
+                            String user = (String) request.getSession().getAttribute("name");
+                        %>
+                        <h6 class="dropdown-header"><%=user%></h6>
+                        <a class="dropdown-item" href="<%=host%>/LogoutButton?author=<%=user%>">登出</a>
+                        <a class="dropdown-item" href="<%=host+"back/"+user%>">後台管理</a>
+                        <%
+                            }
+                        %>
+
                     </div>
                 </div>
                 <div class="btn-group"  style="float:right;padding-top:2vh;padding-right:10px;">
@@ -134,15 +165,15 @@
                         <%
                             String newToOld, oldToNew, hotToCold, coldToHot;
                             if (tag == null) {
-                                newToOld = config.getInitParameter("host") + "user/" + author + "/" + page_number + "?sort=" + manager.NEW_OLD_SORT;
-                                oldToNew = config.getInitParameter("host") + "user/" + author + "/" + page_number + "?sort=" + manager.OLD_NEW_SORT;
-                                hotToCold = config.getInitParameter("host") + "user/" + author + "/" + page_number + "?sort=" + manager.HOT_COLD_SORT;
-                                coldToHot = config.getInitParameter("host") + "user/" + author + "/" + page_number + "?sort=" + manager.COLD_HOT_SORT;
+                                newToOld = host + "user/" + author + "/" + page_number + "?sort=" + manager.NEW_OLD_SORT;
+                                oldToNew = host + "user/" + author + "/" + page_number + "?sort=" + manager.OLD_NEW_SORT;
+                                hotToCold = host + "user/" + author + "/" + page_number + "?sort=" + manager.HOT_COLD_SORT;
+                                coldToHot = host + "user/" + author + "/" + page_number + "?sort=" + manager.COLD_HOT_SORT;
                             } else {
-                                newToOld = config.getInitParameter("host") + "user/" + author + "/" + page_number + "?sort=" + manager.NEW_OLD_SORT + "&tag=" + tag;
-                                oldToNew = config.getInitParameter("host") + "user/" + author + "/" + page_number + "?sort=" + manager.OLD_NEW_SORT + "&tag=" + tag;
-                                hotToCold = config.getInitParameter("host") + "user/" + author + "/" + page_number + "?sort=" + manager.HOT_COLD_SORT + "&tag=" + tag;
-                                coldToHot = config.getInitParameter("host") + "user/" + author + "/" + page_number + "?sort=" + manager.COLD_HOT_SORT + "&tag=" + tag;
+                                newToOld = host + "user/" + author + "/" + page_number + "?sort=" + manager.NEW_OLD_SORT + "&tag=" + tag;
+                                oldToNew = host + "user/" + author + "/" + page_number + "?sort=" + manager.OLD_NEW_SORT + "&tag=" + tag;
+                                hotToCold = host + "user/" + author + "/" + page_number + "?sort=" + manager.HOT_COLD_SORT + "&tag=" + tag;
+                                coldToHot = host + "user/" + author + "/" + page_number + "?sort=" + manager.COLD_HOT_SORT + "&tag=" + tag;
                             }
                         %>
                         <a class="dropdown-item" href="<%=newToOld%>">依照日期(新-->舊)</a>
@@ -185,9 +216,13 @@
                                         <br>
                                         <br>
                                     </p>
-                                    <a class="article-link" href="#">繼續閱讀...</a>
+                                    <%
+                                        //繼續閱讀連結
+                                        String article_link =host+"article/"+author+"?id="+myArticleIDs[i];
+                                    %>
+                                    <a class="article-link" href="<%=article_link%>">繼續閱讀...</a>
                                 </div>
-                                <div class="mypicture"><img class="img-rounded" src="<%=config.getInitParameter("host")%>image/lion.png"></div>
+                                <div class="mypicture"><img class="img-rounded" src="<%=host%>image/lion.png"></div>
                                 <br/>
                             </div>
                             <div>
@@ -195,17 +230,27 @@
                                     人氣<%=manager.getArticleByID(myArticleIDs[i]).getviews()%>
                                 </span>
                                 <%
-                                    String tag_url = config.getInitParameter("host") + "user/" + author + "/" + 1 + "?sort=" + manager.NEW_OLD_SORT + "&tag=" + manager.getArticleByID(myArticleIDs[i]).get_tag();
+                                    //標籤連結
+                                    String tag_url = host + "user/" + author + "/" + 1 + "?sort=" + manager.NEW_OLD_SORT + "&tag=" + manager.getArticleByID(myArticleIDs[i]).get_tag();
                                 %>
                                 <a class="badge badge-info" style="color:white" href="<%=tag_url%>">
                                     <%=manager.getArticleByID(myArticleIDs[i]).get_tag()%>
                                 </a>
+                                <%
+                                    if (viewer_type.equals("Owner")) {
+                                        //文章修改連結
+                                        String article_edit_link = host+"back/"+author+"/edit?id="+myArticleIDs[i];
+                                %>
+                                <a class="badge badge-warning" style="color:white" href="<%=article_edit_link%>"><img src="<%=host%>image/config.png" style="height:15px;border:0;"></a>
+                                    <%
+                                        }
+                                    %>
                             </div>
                         </div>
                     </div>
                     <br>
                     <!--文章模板-->
-                    <%                            }
+                    <%      }
                         }
                     %>
 
@@ -216,13 +261,13 @@
                                 if (myArticleIDs.length % 4 > 0) {
                                     page_range++;
                                 }
-                                String pre_link_page, next_link_page, hide_pre = "", hide_next = "";
+                                String pre_page_link, next_page_link, hide_pre = "", hide_next = "";
                                 if (tag == null) {
-                                    pre_link_page = config.getInitParameter("host") + "user/" + author + "/" + (page_number - 1) + "?sort=" + sort;
-                                    next_link_page = config.getInitParameter("host") + "user/" + author + "/" + (page_number + 1) + "?sort=" + sort;
+                                    pre_page_link = host + "user/" + author + "/" + (page_number - 1) + "?sort=" + sort;
+                                    next_page_link = host + "user/" + author + "/" + (page_number + 1) + "?sort=" + sort;
                                 } else {
-                                    pre_link_page = config.getInitParameter("host") + "user/" + author + "/" + (page_number - 1) + "?sort=" + sort + "&&tag=" + tag;
-                                    next_link_page = config.getInitParameter("host") + "user/" + author + "/" + (page_number + 1) + "?sort=" + sort + "&&tag=" + tag;
+                                    pre_page_link = host + "user/" + author + "/" + (page_number - 1) + "?sort=" + sort + "&&tag=" + tag;
+                                    next_page_link = host + "user/" + author + "/" + (page_number + 1) + "?sort=" + sort + "&&tag=" + tag;
                                 }
                                 if (page_number - 1 < 1) {
                                     hide_pre = "hidden='true'";
@@ -233,9 +278,9 @@
 
 
                             %>
-                            <li class="page-item" <%=hide_pre%> ><a class="page-link" href="<%=pre_link_page%>">Previous</a></li>
+                            <li class="page-item" <%=hide_pre%> ><a class="page-link" href="<%=pre_page_link%>">Previous</a></li>
                             <li class="page-item"><a class="page-link"><%=page_number%></a></li>
-                            <li class="page-item" <%=hide_next%>><a class="page-link" href="<%=next_link_page%>">Next</a></li>
+                            <li class="page-item" <%=hide_next%>><a class="page-link" href="<%=next_page_link%>">Next</a></li>
                             <li class="page-item">
                                 <div class="btn-group dropup">
                                     <button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -245,9 +290,9 @@
                                             for (int i = 1; i <= page_range; i++) {
                                                 String href;
                                                 if (tag == null) {
-                                                    href = config.getInitParameter("host") + "user/" + author + "/" + i + "?sort=" + sort;
+                                                    href = host + "user/" + author + "/" + i + "?sort=" + sort;
                                                 } else {
-                                                    href = config.getInitParameter("host") + "user/" + author + "/" + i + "?sort=" + sort + "&&tag=" + tag;
+                                                    href = host + "user/" + author + "/" + i + "?sort=" + sort + "&&tag=" + tag;
                                                 }
                                         %>
                                         <a class="dropdown-item" href="<%=href%>"><%=i%></a>
@@ -264,9 +309,18 @@
                 <div class="col-sm-3">
                     <p style="border-bottom:5px solid black;font-weight:bold;">系列文章</p>
                     <div class="list-group">
+                        <%
+                            String[] tag_array = manager.getArticleTags();
+                            for (String i : tag_array) {
+                                int tag_number = manager.getArticleIDsByTag(i).length;
+                                String tag_url = host + "user/" + author + "/" + 1 + "?sort=" + manager.NEW_OLD_SORT + "&tag=" + i;
+                        %>
                         <!--標籤模板-->
-                        <a style="font-size:16px;font-weight:bold;" href="#">標籤</a>
-                        <!--標籤模板-->
+                        <a style="font-size:16px;font-weight:bold;" href="<%=tag_url%>"><%=i%>(<%=tag_number%>)</a>
+                        <%
+                            }
+                        %>
+
                     </div>
                 </div>
             </div>

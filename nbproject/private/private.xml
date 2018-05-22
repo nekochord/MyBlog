@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/林哲宏/Documents/NetBeansProjects/MyBlog/web/WEB-INF/web.xml</file>
+            <file>file:/C:/Users/林哲宏/Documents/NetBeansProjects/MyBlog/web/WEB-INF/jsp/content.jsp</file>
+            <file>file:/C:/Users/林哲宏/Documents/NetBeansProjects/MyBlog/web/WEB-INF/jsp/userjump.jsp</file>
+            <file>file:/C:/Users/林哲宏/Documents/NetBeansProjects/MyBlog/src/java/myservlet/LogoutButton.java</file>
+            <file>file:/C:/Users/林哲宏/Documents/NetBeansProjects/MyBlog/web/WEB-INF/jsp/articlejump.jsp</file>
+            <file>file:/C:/Users/林哲宏/Documents/NetBeansProjects/MyBlog/web/WEB-INF/jsp/backjump.jsp</file>
+            <file>file:/C:/Users/林哲宏/Documents/NetBeansProjects/MyBlog/web/WEB-INF/dispatcher-servlet.xml</file>
+            <file>file:/C:/Users/林哲宏/Documents/NetBeansProjects/MyBlog/src/java/blog/article/XArticles.java</file>
+            <file>file:/C:/Users/林哲宏/Documents/NetBeansProjects/MyBlog/web/WEB-INF/jsp/article.jsp</file>
+        </group>
+    </open-files>
 </project-private>

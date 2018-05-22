@@ -22,14 +22,47 @@
     </servlet>
     <servlet>
         <servlet-name>userjump</servlet-name>
+        <init-param>
+            <param-name>host</param-name>
+            <param-value>http://localhost:8084/MyBlog/</param-value>
+            <description>主機位址</description>
+        </init-param>
         <jsp-file>/WEB-INF/jsp/userjump.jsp</jsp-file>
     </servlet>
     <servlet>
+        <servlet-name>articlejump</servlet-name>
+        <init-param>
+            <param-name>host</param-name>
+            <param-value>http://localhost:8084/MyBlog/</param-value>
+            <description>主機位址</description>
+        </init-param>
+        <jsp-file>/WEB-INF/jsp/articlejump.jsp</jsp-file>
+    </servlet>
+    <servlet>
+        <servlet-name>backjump</servlet-name>
+        <init-param>
+            <param-name>host</param-name>
+            <param-value>http://localhost:8084/MyBlog/</param-value>
+            <description>主機位址</description>
+        </init-param>
+        <jsp-file>/WEB-INF/jsp/backjump.jsp</jsp-file>
+    </servlet>
+    <servlet>
         <servlet-name>LoginButton</servlet-name>
+        <init-param>
+            <param-name>host</param-name>
+            <param-value>http://localhost:8084/MyBlog/</param-value>
+            <description>主機位址</description>
+        </init-param>
         <servlet-class>myservlet.LoginButton</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>RegisterButton</servlet-name>
+        <init-param>
+            <param-name>host</param-name>
+            <param-value>http://localhost:8084/MyBlog/</param-value>
+            <description>主機位址</description>
+        </init-param>
         <servlet-class>myservlet.RegisterButton</servlet-class>
     </servlet>
     <servlet>
@@ -37,13 +70,40 @@
         <jsp-file>/WEB-INF/jsp/ErrorPage.jsp</jsp-file>
     </servlet>
     <servlet>
-        <servlet-name>content</servlet-name>
+        <servlet-name>LogoutButton</servlet-name>
         <init-param>
             <param-name>host</param-name>
             <param-value>http://localhost:8084/MyBlog/</param-value>
             <description>主機位址</description>
         </init-param>
-        <jsp-file>/WEB-INF/jsp/content.jsp</jsp-file>
+        <servlet-class>myservlet.LogoutButton</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>NewArticleButton</servlet-name>
+        <init-param>
+            <param-name>host</param-name>
+            <param-value>http://localhost:8084/MyBlog/</param-value>
+            <description>主機位址</description>
+        </init-param>
+        <servlet-class>myservlet.NewArticleButton</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EditArticleButton</servlet-name>
+        <init-param>
+            <param-name>host</param-name>
+            <param-value>http://localhost:8084/MyBlog/</param-value>
+            <description>主機位址</description>
+        </init-param>
+        <servlet-class>myservlet.EditArticleButton</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteButton</servlet-name>
+        <init-param>
+            <param-name>host</param-name>
+            <param-value>http://localhost:8084/MyBlog/</param-value>
+            <description>主機位址</description>
+        </init-param>
+        <servlet-class>myservlet.DeleteButton</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>login</servlet-name>
@@ -66,20 +126,37 @@
         <url-pattern>/ErrorPage</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>content</servlet-name>
-        <url-pattern>/content</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>userjump</servlet-name>
         <url-pattern>/user/*</url-pattern>
     </servlet-mapping>
-    
+    <servlet-mapping>
+        <servlet-name>backjump</servlet-name>
+        <url-pattern>/back/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>articlejump</servlet-name>
+        <url-pattern>/article/*</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>*.htm</url-pattern>
     </servlet-mapping>
-    
-    
+    <servlet-mapping>
+        <servlet-name>LogoutButton</servlet-name>
+        <url-pattern>/LogoutButton</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>NewArticleButton</servlet-name>
+        <url-pattern>/NewArticleButton</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditArticleButton</servlet-name>
+        <url-pattern>/EditArticleButton</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteButton</servlet-name>
+        <url-pattern>/DeleteButton</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

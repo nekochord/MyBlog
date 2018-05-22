@@ -18,18 +18,24 @@
 %>
 <%
     String result = "";
-    Object code = request.getAttribute("code");
+    String code = request.getParameter("code");
     if (code == null) {
         System.out.println("no problem");
     } else {
-        switch ((int) code) {
-            case 101:
-                result = myAlert("使用者名稱或密碼欄位為空");
-                break;
-            case 102:
-                result = myAlert("使用者名稱或密碼錯誤!!!");
-                break;
+        try {
+            int code_number = Integer.parseInt(code);
+            switch (code_number) {
+                case 101:
+                    result = myAlert("使用者名稱或密碼欄位為空");
+                    break;
+                case 102:
+                    result = myAlert("使用者名稱或密碼錯誤!!!");
+                    break;
+            }
+        } catch (Exception e) {
+
         }
+
     }
 %>
 
